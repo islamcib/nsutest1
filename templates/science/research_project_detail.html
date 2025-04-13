@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ project.title }} - Нарынский государственный университет{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'science:research_areas' %}">Научные направления</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'science:research_area_detail' project.area.slug %}">{{ project.area.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ project.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <h1 class="mb-4">{{ project.title }}</h1>
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="mb-3">Информация о проекте</h5>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <strong>Научное направление:</strong><br>
+                                    <a href="{% url 'science:research_area_detail' project.area.slug %}" class="text-decoration-none">
+                                        {{ project.area.name }}
+                                    </a>
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Руководитель:</strong><br>
+                                    {{ project.leader }}
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Период реализации:</strong><br>
+                                    {{ project.start_date|date:"d.m.Y" }} - 
+                                    {% if project.end_date %}
+                                        {{ project.end_date|date:"d.m.Y" }}
+                                    {% else %}
+                                        настоящее время
+                                    {% endif %}
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="mb-3">Статус проекта</h5>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="status-indicator {% if project.end_date %}bg-success{% else %}bg-primary{% endif %}"></div>
+                                <span class="ms-2">
+                                    {% if project.end_date %}
+                                        Завершен
+                                    {% else %}
+                                        В процессе
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content mb-5">
+                {{ project.description|safe }}
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Публикации по проекту</h5>
+                </div>
+                <div class="card-body">
+                    {% if project.publications.all %}
+                    <ul class="list-unstyled">
+                        {% for publication in project.publications.all|slice:":5" %}
+                        <li class="mb-3">
+                            <a href="{% url 'science:publication_detail' publication.slug %}" class="text-decoration-none">
+                                {{ publication.title }}
+                            </a>
+                            <div class="small text-muted">
+                                {{ publication.authors }}, {{ publication.year }}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <a href="{% url 'science:publications' %}?project={{ project.slug }}" class="btn btn-outline-primary btn-sm">
+                        Все публикации
+                    </a>
+                    {% else %}
+                    <p class="text-muted">Публикации пока не добавлены</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Связанные проекты</h5>
+                </div>
+                <div class="card-body">
+                    {% with related_projects=project.area.projects.exclude(id=project.id)|slice:":5" %}
+                    {% if related_projects %}
+                    <ul class="list-unstyled">
+                        {% for related_project in related_projects %}
+                        <li class="mb-3">
+                            <a href="{% url 'science:research_project_detail' related_project.slug %}" class="text-decoration-none">
+                                {{ related_project.title }}
+                            </a>
+                            <div class="small text-muted">
+                                {{ related_project.start_date|date:"Y" }} - 
+                                {% if related_project.end_date %}
+                                    {{ related_project.end_date|date:"Y" }}
+                                {% else %}
+                                    настоящее время
+                                {% endif %}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-muted">Связанные проекты отсутствуют</p>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_css %}
+<style>
+    .content {
+        line-height: 1.8;
+    }
+    .status-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+    }
+    .list-unstyled li {
+        transition: transform 0.2s;
+    }
+    .list-unstyled li:hover {
+        transform: translateX(5px);
+    }
+</style>
+{% endblock %}
+{% endblock %} 

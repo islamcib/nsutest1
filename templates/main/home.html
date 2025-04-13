@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Главная - {{ university_info.title }}{% endblock %}
+
+{% block content %}
+<!-- Баннер -->
+<div class="banner" style="background-image: url('{{ university_info.banner.url }}');">
+    <div class="banner-text">
+        <h1>{{ university_info.title }}</h1>
+        <p class="lead">Современное образование для будущего Кыргызстана</p>
+    </div>
+</div>
+
+<!-- Миссия университета -->
+<section class="py-5">
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">Миссия университета</h2>
+                <p class="card-text text-center">
+                    {{ university_info.mission }}
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Гимн университета -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="accordion" id="hymnAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#hymnCollapse">
+                        Гимн университета
+                    </button>
+                </h2>
+                <div id="hymnCollapse" class="accordion-collapse collapse show" data-bs-parent="#hymnAccordion">
+                    <div class="accordion-body">
+                        <p class="text-center">
+                            {{ university_info.hymn }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Факультеты -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Наши факультеты</h2>
+        <div class="row">
+            {% for faculty in faculties %}
+            <div class="col-md-4 mb-4">
+                <div class="card faculty-card">
+                    {% if faculty.image %}
+                    <img src="{{ faculty.image.url }}" class="card-img-top" alt="{{ faculty.name }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ faculty.name }}</h5>
+                        <p class="card-text">{{ faculty.description|truncatewords:20 }}</p>
+                        <a href="{% url 'faculties:detail' faculty.slug %}" class="btn btn-primary">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Новости -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-4">Последние новости</h2>
+        <div class="row">
+            {% for news in latest_news %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    {% if news.image %}
+                    <img src="{{ news.image.url }}" class="card-img-top" alt="{{ news.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ news.title }}</h5>
+                        <p class="card-text">{{ news.short_description }}</p>
+                        <a href="{% url 'news:detail' news.slug %}" class="btn btn-primary">Читать далее</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Местоположение -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Как нас найти</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Контактная информация</h5>
+                        <p class="card-text">
+                            {{ university_info.address }}<br>
+                            Телефон: {{ university_info.phone }}<br>
+                            Email: {{ university_info.email }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Корпуса университета</h5>
+                        <ul class="list-group list-group-flush">
+                            {% for building in buildings %}
+                            <li class="list-group-item">{{ building.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.banner {
+    height: 500px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    margin-bottom: 2rem;
+}
+
+.banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.banner-text {
+    position: relative;
+    z-index: 1;
+}
+
+.banner h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+.faculty-card {
+    transition: transform 0.2s;
+}
+
+.faculty-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+    .banner {
+        height: 300px;
+    }
+    .banner h1 {
+        font-size: 2.5rem;
+    }
+}
+</style>
+{% endblock %} 

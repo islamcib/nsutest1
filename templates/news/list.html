@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Новости - Нарынский государственный университет{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <h1 class="mb-4">Новости</h1>
+            
+            {% for item in news %}
+            <div class="card mb-4">
+                {% if item.image %}
+                <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h2 class="card-title h4">
+                        <a href="{% url 'news:detail' item.slug %}" class="text-decoration-none">{{ item.title }}</a>
+                    </h2>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="text-muted">
+                            <i class="bi bi-calendar"></i> {{ item.created_at|date:"d.m.Y" }}
+                            <i class="bi bi-person ms-3"></i> {{ item.author }}
+                        </div>
+                        <span class="badge bg-primary">{{ item.category.name }}</span>
+                    </div>
+                    <p class="card-text">{{ item.short_description }}</p>
+                    <a href="{% url 'news:detail' item.slug %}" class="btn btn-primary">Читать далее</a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="alert alert-info">
+                Новости пока не добавлены.
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Боковая панель -->
+        <div class="col-lg-4">
+            <!-- Категории -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Категории</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% for category in categories %}
+                    <a href="{% url 'news:category' category.slug %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        {{ category.name }}
+                        <span class="badge bg-primary rounded-pill">{{ category.news_count }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card {
+        transition: transform 0.2s;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    .card-img-top {
+        height: 300px;
+        object-fit: cover;
+    }
+    .list-group-item:hover {
+        background-color: #f8f9fa;
+    }
+</style>
+{% endblock %} 

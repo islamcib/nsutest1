@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Факультеты - Нарынский государственный университет{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-5">Факультеты и колледжи</h1>
+    
+    <!-- Поиск и фильтрация -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <form method="get" class="d-flex">
+                <input type="text" name="search" class="form-control me-2" placeholder="Поиск факультетов..." value="{{ request.GET.search }}">
+                <button type="submit" class="btn btn-primary">Поиск</button>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    Фильтр по типу
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="?type=faculty">Факультеты</a></li>
+                    <li><a class="dropdown-item" href="?type=college">Колледжи</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Список факультетов -->
+    <div class="row">
+        {% for faculty in faculties %}
+        <div class="col-md-4 mb-4">
+            <div class="card faculty-card h-100">
+                <img src="{{ faculty.image.url }}" class="card-img-top" alt="{{ faculty.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ faculty.name }}</h5>
+                    <p class="card-text">{{ faculty.description|truncatewords:30 }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{% url 'faculties:detail' faculty.slug %}" class="btn btn-primary">Подробнее</a>
+                        <small class="text-muted">{{ faculty.departments.count }} кафедр</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .faculty-card {
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .faculty-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+</style>
+{% endblock %} 

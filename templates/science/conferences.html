@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Конференции - Нарынский государственный университет{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">Конференции</h1>
+
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <form method="get" class="d-flex">
+                <input type="text" name="search" class="form-control me-2" placeholder="Поиск конференций..." value="{{ request.GET.search }}">
+                <button type="submit" class="btn btn-primary">Поиск</button>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <select class="form-select" onchange="window.location.href=this.value">
+                <option value="{% url 'science:conferences' %}" {% if not request.GET.status %}selected{% endif %}>Все конференции</option>
+                <option value="{% url 'science:conferences' %}?status=active" {% if request.GET.status == 'active' %}selected{% endif %}>Активные</option>
+                <option value="{% url 'science:conferences' %}?status=past" {% if request.GET.status == 'past' %}selected{% endif %}>Прошедшие</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for conference in conferences %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ conference.title }}</h5>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            {{ conference.start_date|date:"d.m.Y" }} - {{ conference.end_date|date:"d.m.Y" }}<br>
+                            {{ conference.location }}
+                        </small>
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{% url 'science:conference_detail' conference.slug %}" class="btn btn-primary btn-sm">
+                            Подробнее
+                        </a>
+                        {% if conference.is_active %}
+                        <span class="badge bg-success">Активная</span>
+                        {% else %}
+                        <span class="badge bg-secondary">Завершена</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                Конференции не найдены
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">{{ num }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+{% block extra_css %}
+<style>
+    .card {
+        transition: transform 0.2s;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .pagination .page-link {
+        color: #0d6efd;
+    }
+    .pagination .page-item.active .page-link {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+</style>
+{% endblock %}
+{% endblock %} 

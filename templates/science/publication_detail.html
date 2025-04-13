@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ publication.title }} - Нарынский государственный университет{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'science:publications' %}">Публикации</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ publication.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <h1 class="mb-4">{{ publication.title }}</h1>
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="mb-3">Информация о публикации</h5>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <strong>Авторы:</strong><br>
+                                    {{ publication.authors }}
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Год:</strong><br>
+                                    {{ publication.year }}
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Тип:</strong><br>
+                                    {{ publication.get_type_display }}
+                                </li>
+                                {% if publication.journal %}
+                                <li class="mb-2">
+                                    <strong>Журнал/Издательство:</strong><br>
+                                    {{ publication.journal }}
+                                </li>
+                                {% endif %}
+                                {% if publication.volume %}
+                                <li class="mb-2">
+                                    <strong>Том:</strong><br>
+                                    {{ publication.volume }}
+                                </li>
+                                {% endif %}
+                                {% if publication.issue %}
+                                <li class="mb-2">
+                                    <strong>Номер:</strong><br>
+                                    {{ publication.issue }}
+                                </li>
+                                {% endif %}
+                                {% if publication.pages %}
+                                <li class="mb-2">
+                                    <strong>Страницы:</strong><br>
+                                    {{ publication.pages }}
+                                </li>
+                                {% endif %}
+                                {% if publication.doi %}
+                                <li class="mb-2">
+                                    <strong>DOI:</strong><br>
+                                    <a href="https://doi.org/{{ publication.doi }}" target="_blank">{{ publication.doi }}</a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="mb-3">Ключевые слова</h5>
+                            <div class="keywords">
+                                {% for keyword in publication.keywords_list %}
+                                <span class="badge bg-secondary me-2 mb-2">{{ keyword }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if publication.abstract %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Аннотация</h5>
+                </div>
+                <div class="card-body">
+                    {{ publication.abstract|safe }}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if publication.file %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Полный текст</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{{ publication.file.url }}" class="btn btn-primary" target="_blank">
+                        <i class="bi bi-download me-2"></i>Скачать публикацию
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-4">
+            {% if related_publications %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Похожие публикации</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        {% for related in related_publications %}
+                        <li class="mb-3">
+                            <a href="{% url 'science:publication_detail' related.slug %}" class="text-decoration-none">
+                                {{ related.title }}
+                            </a>
+                            <div class="small text-muted">
+                                {{ related.authors }}, {{ related.year }}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if publication.projects.all %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Связанные проекты</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        {% for project in publication.projects.all %}
+                        <li class="mb-3">
+                            <a href="{% url 'science:research_project_detail' project.slug %}" class="text-decoration-none">
+                                {{ project.title }}
+                            </a>
+                            <div class="small text-muted">
+                                {{ project.start_date|date:"Y" }} - 
+                                {% if project.end_date %}
+                                    {{ project.end_date|date:"Y" }}
+                                {% else %}
+                                    настоящее время
+                                {% endif %}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% block extra_css %}
+<style>
+    .keywords {
+        line-height: 2;
+    }
+    .badge {
+        font-size: 0.9rem;
+        padding: 0.5em 0.8em;
+    }
+    .list-unstyled li {
+        transition: transform 0.2s;
+    }
+    .list-unstyled li:hover {
+        transform: translateX(5px);
+    }
+</style>
+{% endblock %}
+{% endblock %} 

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Образовательные программы - Нарынский государственный университет{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-5">Образовательные программы</h1>
+
+    <!-- Список программ -->
+    <div class="row">
+        {% for program in programs %}
+        <div class="col-md-6 mb-4">
+            <div class="card program-card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ program.title }}</h5>
+                    <p class="card-text">{{ program.description|truncatewords:30 }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{% url 'education:program_detail' program.slug %}" class="btn btn-primary">Подробнее</a>
+                        <small class="text-muted">{{ program.degree }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .program-card {
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .program-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %} 

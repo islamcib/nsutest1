@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ conference.title }} - Нарынский государственный университет{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'science:conferences' %}">Конференции</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ conference.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <h1 class="mb-4">{{ conference.title }}</h1>
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="mb-3">Информация о конференции</h5>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <strong>Даты проведения:</strong><br>
+                                    {{ conference.start_date|date:"d.m.Y" }} - {{ conference.end_date|date:"d.m.Y" }}
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Место проведения:</strong><br>
+                                    {{ conference.location }}
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Организатор:</strong><br>
+                                    {{ conference.organizer }}
+                                </li>
+                                {% if conference.website %}
+                                <li class="mb-2">
+                                    <strong>Официальный сайт:</strong><br>
+                                    <a href="{{ conference.website }}" target="_blank">{{ conference.website }}</a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="mb-3">Регистрация</h5>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="status-indicator {% if conference.is_active %}bg-success{% else %}bg-secondary{% endif %}"></div>
+                                <span class="ms-2">
+                                    {% if conference.is_active %}
+                                        Регистрация открыта
+                                    {% else %}
+                                        Регистрация закрыта
+                                    {% endif %}
+                                </span>
+                            </div>
+                            {% if conference.registration_deadline %}
+                            <p class="mb-0">
+                                <strong>Срок регистрации:</strong><br>
+                                {{ conference.registration_deadline|date:"d.m.Y" }}
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content mb-5">
+                {{ conference.description|safe }}
+            </div>
+
+            {% if conference.is_active and conference.registration_deadline %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Регистрация на конференцию</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'science:conference_registration' conference.slug %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="name" class="form-label">ФИО</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="organization" class="form-label">Организация</label>
+                            <input type="text" class="form-control" id="organization" name="organization" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="position" class="form-label">Должность</label>
+                            <input type="text" class="form-control" id="position" name="position" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="abstract" class="form-label">Тезисы доклада</label>
+                            <textarea class="form-control" id="abstract" name="abstract" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Важные даты</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <strong>Начало конференции:</strong><br>
+                            {{ conference.start_date|date:"d.m.Y" }}
+                        </li>
+                        <li class="mb-3">
+                            <strong>Окончание конференции:</strong><br>
+                            {{ conference.end_date|date:"d.m.Y" }}
+                        </li>
+                        {% if conference.registration_deadline %}
+                        <li class="mb-3">
+                            <strong>Срок регистрации:</strong><br>
+                            {{ conference.registration_deadline|date:"d.m.Y" }}
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Контакты</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <strong>Email:</strong><br>
+                            <a href="mailto:{{ conference.contact_email }}">{{ conference.contact_email }}</a>
+                        </li>
+                        {% if conference.contact_phone %}
+                        <li class="mb-3">
+                            <strong>Телефон:</strong><br>
+                            <a href="tel:{{ conference.contact_phone }}">{{ conference.contact_phone }}</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_css %}
+<style>
+    .content {
+        line-height: 1.8;
+    }
+    .status-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+    }
+    .list-unstyled li {
+        transition: transform 0.2s;
+    }
+    .list-unstyled li:hover {
+        transform: translateX(5px);
+    }
+</style>
+{% endblock %}
+{% endblock %} 

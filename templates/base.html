@@ -1,0 +1,703 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Нарынский государственный университет{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    {% block extra_css %}{% endblock %}
+
+    <style>
+        :root {
+            --primary-color: #0B1F6C;
+            --secondary-color: #1E4B94;
+            --accent-color: #2E8BE8;
+            --light-color: #E8F1FF;
+            --text-color: #2C3E50;
+            --bg-color: #F5F7FA;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .navbar {
+            backdrop-filter: blur(10px);
+            background-color: rgba(11, 31, 108, 0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            padding: 1rem 0;
+        }
+
+        .navbar.scrolled {
+            background-color: var(--primary-color);
+            padding: 0.5rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            color: var(--white);
+            font-size: 1.1rem;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .navbar-brand img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .navbar-brand .university-name {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+        }
+
+        .navbar-brand .university-name span:first-child {
+            font-size: 1em;
+            font-weight: 700;
+        }
+
+        .navbar-brand .university-name span:last-child {
+            font-size: 0.7em;
+            opacity: 0.9;
+        }
+
+        .navbar-nav {
+            margin-left: 1rem;
+        }
+
+        .nav-link {
+            font-size: 0.9rem;
+            padding: 0.4rem 0.8rem;
+        }
+
+        .language-switcher {
+            margin-left: 0.5rem;
+        }
+
+        .language-switcher select {
+            color: var(--white);
+        }
+
+        .language-switcher select option {
+            color: var(--text-color);
+            background-color: var(--white);
+        }
+
+        .faculty-card, .college-card {
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1.5rem;
+        }
+
+        .faculty-card:hover, .college-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .faculty-card img, .college-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .faculty-card .card-body, .college-card .card-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .faculty-card .card-title, .college-card .card-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .faculty-card .card-text, .college-card .card-text {
+            color: var(--text-color);
+            flex-grow: 1;
+        }
+
+        .faculty-card a, .college-card a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .faculty-card a:hover, .college-card a:hover {
+            color: var(--accent-color);
+        }
+
+        .dropdown-menu {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            min-width: 250px;
+            padding: 0.5rem 0;
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            color: var(--text-color);
+        }
+
+        .dropdown-item:hover {
+            background: var(--light-color);
+            color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
+        .dropdown-item i {
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+
+        .section {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            color: var(--primary-color);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent-color);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .footer {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 4rem 0 1.5rem;
+            margin-top: 0;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section {
+            padding: 0 1rem;
+        }
+
+        .footer-section h5 {
+            color: var(--white);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-section h5::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--accent-color);
+        }
+
+        .footer-section h6 {
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            margin: 1rem 0 0.5rem;
+            font-weight: 600;
+        }
+
+        .contact-info {
+            margin: 1.5rem 0;
+        }
+
+        .contact-info p {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quick-links {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .link-group {
+            margin-bottom: 1rem;
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent-color);
+            transform: translateX(5px);
+        }
+
+        .footer-section a i {
+            margin-right: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        .news-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .news-link span {
+            flex: 1;
+        }
+
+        .more-link {
+            color: var(--accent-color) !important;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        .footer-social {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .footer-social a {
+            color: var(--white);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-social a:hover {
+            color: var(--accent-color);
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .footer-social a span {
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: none;
+        }
+
+        .footer-bottom {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bottom-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .developer-info {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .developer-info a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .developer-info a:hover {
+            text-decoration: underline;
+        }
+
+        @media (min-width: 992px) {
+            .quick-links {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .footer-social a {
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+            }
+            
+            .footer-social a span {
+                display: inline;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-section {
+                text-align: center;
+            }
+            
+            .footer-section h5::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .footer-social {
+                justify-content: center;
+            }
+            
+            .footer-bottom-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .footer-links {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Навигация -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'main:home' %}">
+                {% if university_info.logo %}
+                <img src="{{ university_info.logo.url }}" alt="{{ university_info.name }}">
+                {% endif %}
+                <div class="university-name">
+                    <span>НГУ</span>
+                    <span>имени С. Нааматова</span>
+                </div>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'main:home' %}">{% trans "Главная" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'main:about' %}">{% trans "О нас" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'faculties:list' %}">{% trans "Факультеты" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'colleges:college_list' %}">{% trans "Колледжи" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'news:list' %}">{% trans "Новости" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'science:science' %}">{% trans "Наука" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'education:program_list' %}">{% trans "Образование" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contacts:contact' %}">{% trans "Контакты" %}</a>
+                    </li>
+                </ul>
+
+                <!-- Переключатель языков (Select) -->
+                <div class="language-switcher ms-lg-2">
+                    <select id="languageSelect" class="form-select form-select-sm bg-transparent border-light" aria-label="Language selector">
+                        {% get_current_language as LANGUAGE_CODE %}
+                        {% get_available_languages as LANGUAGES %}
+                        {% for lang_code, lang_name in LANGUAGES %}
+                            <option value="{{ lang_code }}" {% if lang_code == LANGUAGE_CODE %}selected{% endif %}>
+                                {{ lang_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <!-- Конец переключателя языков -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Контент -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <!-- О нас и контакты -->
+                <div class="footer-section">
+                    <h5>{% trans "О нас" %}</h5>
+                    <p>{{ university_info.short_description }}</p>
+                    <div class="contact-info">
+                        <p><i class="bi bi-geo-alt"></i> {{ university_info.address }}</p>
+                        <p><i class="bi bi-telephone"></i> {{ university_info.phone }}</p>
+                        <p><i class="bi bi-envelope"></i> {{ university_info.email }}</p>
+                    </div>
+                    <div class="footer-social">
+                        {% if university_info.facebook %}
+                        <a href="{{ university_info.facebook }}" target="_blank" title="Facebook">
+                            <i class="bi bi-facebook"></i>
+                            <span>Facebook</span>
+                        </a>
+                        {% endif %}
+                        {% if university_info.instagram %}
+                        <a href="{{ university_info.instagram }}" target="_blank" title="Instagram">
+                            <i class="bi bi-instagram"></i>
+                            <span>Instagram</span>
+                        </a>
+                        {% endif %}
+                        {% if university_info.telegram %}
+                        <a href="{{ university_info.telegram }}" target="_blank" title="Telegram">
+                            <i class="bi bi-telegram"></i>
+                            <span>Telegram</span>
+                        </a>
+                        {% endif %}
+                        {% if university_info.youtube %}
+                        <a href="{{ university_info.youtube }}" target="_blank" title="YouTube">
+                            <i class="bi bi-youtube"></i>
+                            <span>YouTube</span>
+                        </a>
+                        {% endif %}
+                        {% if university_info.tiktok %}
+                        <a href="{{ university_info.tiktok }}" target="_blank" title="TikTok">
+                            <i class="bi bi-tiktok"></i>
+                            <span>TikTok</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Быстрые ссылки -->
+                <div class="footer-section">
+                    <h5>{% trans "Быстрые ссылки" %}</h5>
+                    <div class="quick-links">
+                        <div class="link-group">
+                            <h6>{% trans "Университет" %}</h6>
+                            <a href="{% url 'main:about' %}"><i class="bi bi-chevron-right"></i> {% trans "О нас" %}</a>
+                            <a href="{% url 'main:about' %}"><i class="bi bi-chevron-right"></i> {% trans "История" %}</a>
+                            <a href="{% url 'main:about' %}"><i class="bi bi-chevron-right"></i> {% trans "Руководство" %}</a>
+                            <a href="{% url 'main:about' %}"><i class="bi bi-chevron-right"></i> {% trans "Документы" %}</a>
+                        </div>
+                        <div class="link-group">
+                            <h6>{% trans "Образование" %}</h6>
+                            <a href="{% url 'education:program_list' %}"><i class="bi bi-chevron-right"></i> {% trans "Программы" %}</a>
+                            <a href="{% url 'education:program_list' %}#bachelor"><i class="bi bi-chevron-right"></i> {% trans "Бакалавриат" %}</a>
+                            <a href="{% url 'education:program_list' %}#master"><i class="bi bi-chevron-right"></i> {% trans "Магистратура" %}</a>
+                            <a href="{% url 'education:program_list' %}#phd"><i class="bi bi-chevron-right"></i> {% trans "Аспирантура" %}</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Факультеты и колледжи -->
+                <div class="footer-section">
+                    <h5>{% trans "Подразделения" %}</h5>
+                    <div class="quick-links">
+                        <div class="link-group">
+                            <h6>{% trans "Факультеты" %}</h6>
+                            {% for faculty in faculties|slice:":4" %}
+                            <a href="{% url 'faculties:detail' faculty.slug %}">
+                                <i class="bi bi-chevron-right"></i> {{ faculty.name }}
+                            </a>
+                            {% endfor %}
+                            <a href="{% url 'faculties:list' %}" class="more-link">
+                                <i class="bi bi-arrow-right"></i> {% trans "Все факультеты" %}
+                            </a>
+                        </div>
+                        <div class="link-group">
+                            <h6>{% trans "Колледжи" %}</h6>
+                            {% for college in colleges|slice:":4" %}
+                            <a href="{% url 'colleges:college_detail' college.slug %}">
+                                <i class="bi bi-chevron-right"></i> {{ college.name }}
+                            </a>
+                            {% endfor %}
+                            <a href="{% url 'colleges:college_list' %}" class="more-link">
+                                <i class="bi bi-arrow-right"></i> {% trans "Все колледжи" %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Новости и наука -->
+                <div class="footer-section">
+                    <h5>{% trans "Новости и наука" %}</h5>
+                    <div class="quick-links">
+                        <div class="link-group">
+                            <h6>{% trans "Новости" %}</h6>
+                            {% for news in latest_news|slice:":3" %}
+                            <a href="{% url 'news:detail' news.slug %}" class="news-link">
+                                <i class="bi bi-newspaper"></i>
+                                <span>{{ news.title|truncatewords:5 }}</span>
+                            </a>
+                            {% endfor %}
+                            <a href="{% url 'news:list' %}" class="more-link">
+                                <i class="bi bi-arrow-right"></i> {% trans "Все новости" %}
+                            </a>
+                        </div>
+                        <div class="link-group">
+                            <h6>{% trans "Наука" %}</h6>
+                            <a href="{% url 'science:science' %}"><i class="bi bi-chevron-right"></i> {% trans "Научная деятельность" %}</a>
+                            <a href="{% url 'science:research_areas' %}"><i class="bi bi-chevron-right"></i> {% trans "Научные направления" %}</a>
+                            <a href="{% url 'science:publications' %}"><i class="bi bi-chevron-right"></i> {% trans "Публикации" %}</a>
+                            <a href="{% url 'science:conferences' %}"><i class="bi bi-chevron-right"></i> {% trans "Конференции" %}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Нижняя часть футера -->
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <div class="copyright">
+                        <p>&copy; {% now "Y" %} {{ university_info.name }}. {% trans "Все права защищены" %}.</p>
+                    </div>
+                    <div class="footer-links">
+                        <a href="{% url 'main:about' %}#privacy">{% trans "Политика конфиденциальности" %}</a>
+                        <a href="{% url 'main:about' %}#terms">{% trans "Условия использования" %}</a>
+                        <a href="{% url 'main:about' %}#sitemap">{% trans "Карта сайта" %}</a>
+                    </div>
+                    <div class="developer-info">
+                        {% trans "Разработано" %} <a href="https://github.com/yourusername" target="_blank">Кулназаров Ислам</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const languageSelect = document.getElementById('languageSelect');
+            if (languageSelect) {
+                // Доступные языки из settings.py
+                const availableLanguages = ['ru', 'en', 'ky'];
+                const currentLangCode = '{{ LANGUAGE_CODE }}'; // Текущий язык из Django
+
+                languageSelect.addEventListener('change', function(event) {
+                    const selectedLangCode = event.target.value;
+                    let currentPath = window.location.pathname;
+                    let newPath;
+
+                    // Проверяем, начинается ли текущий путь с префикса текущего языка
+                    const currentPrefix = '/' + currentLangCode + '/';
+                    const currentPrefixRoot = '/' + currentLangCode;
+
+                    if (currentPath.startsWith(currentPrefix)) {
+                        // Заменяем префикс текущего языка на новый
+                        newPath = '/' + selectedLangCode + '/' + currentPath.substring(currentPrefix.length);
+                    } else if (currentPath === currentPrefixRoot) {
+                         // Обрабатываем корневой URL текущего языка (например, /en -> /ru)
+                         newPath = '/' + selectedLangCode;
+                    } else {
+                        // Путь не начинается с известного префикса текущего языка.
+                        // Как запасной вариант, предполагаем, что путь относится к корню,
+                        // и добавляем префикс нового языка.
+                        // Убедимся, что не добавляем двойные слеши, если currentPath уже '/'
+                        newPath = '/' + selectedLangCode + (currentPath === '/' ? '' : currentPath);
+                    }
+
+                    // Сохраняем параметры запроса и хэш
+                    const searchAndHash = window.location.search + window.location.hash;
+
+                    // Перенаправляем на новый URL
+                    window.location.href = newPath + searchAndHash;
+                });
+            }
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

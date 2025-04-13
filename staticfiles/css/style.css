@@ -1,0 +1,315 @@
+:root {
+    --primary-color: #0B1F6C;      /* Темно-синий */
+    --secondary-color: #1E4B94;    /* Синий */
+    --accent-color: #2E8BE8;       /* Яркий синий */
+    --light-blue: #E8F1FF;         /* Светло-синий */
+    --text-color: #2C3E50;         /* Темно-серый для текста */
+    --light-gray: #F5F7FA;         /* Светло-серый для фона */
+    --white: #FFFFFF;
+}
+
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* Навигация */
+.navbar {
+    background-color: var(--primary-color);
+    padding: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--white) !important;
+}
+
+.navbar-nav .nav-link {
+    color: var(--white) !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--light-blue) !important;
+}
+
+/* Баннер */
+.banner {
+    height: 600px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--white);
+    margin-bottom: 0;
+}
+
+.banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(11,31,108,0.7), rgba(11,31,108,0.9));
+}
+
+.banner-text {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.banner h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.banner .lead {
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+/* Секции */
+section {
+    padding: 5rem 0;
+}
+
+section h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
+/* Карточки */
+.card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin-bottom: 2rem;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.card-title {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+/* Кнопки */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+/* Факультеты */
+.faculty-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.faculty-card .card-img-top {
+    height: 250px;
+}
+
+.faculty-card .card-body {
+    background: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,1));
+}
+
+/* Новости */
+.news-card {
+    height: 100%;
+}
+
+.news-card .card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.news-card .btn {
+    margin-top: auto;
+}
+
+/* Контакты */
+.contact-info {
+    background-color: var(--light-gray);
+    padding: 2rem;
+    border-radius: 8px;
+}
+
+.contact-info i {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+}
+
+/* Подвал */
+footer {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 3rem 0;
+}
+
+footer h5 {
+    color: var(--light-blue);
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+footer a {
+    color: var(--white);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+footer a:hover {
+    color: var(--light-blue);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .banner {
+        height: 400px;
+    }
+    
+    .banner h1 {
+        font-size: 2.5rem;
+    }
+    
+    .banner .lead {
+        font-size: 1.2rem;
+    }
+    
+    section {
+        padding: 3rem 0;
+    }
+    
+    section h2 {
+        font-size: 2rem;
+    }
+}
+
+/* Анимации */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s, transform 0.6s;
+}
+
+.animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Дополнительные стили */
+.bg-light-blue {
+    background-color: var(--light-blue);
+}
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.border-primary {
+    border-color: var(--primary-color) !important;
+}
+
+/* Стили для списков */
+.list-group-item {
+    border: none;
+    background-color: transparent;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.list-group-item:hover {
+    background-color: var(--light-blue);
+}
+
+/* Стили для форм */
+.form-control {
+    border: 2px solid #e9ecef;
+    border-radius: 4px;
+    padding: 0.75rem;
+    transition: border-color 0.3s;
+}
+
+.form-control:focus {
+    border-color: var(--accent-color);
+    box-shadow: none;
+}
+
+/* Стили для таблиц */
+.table {
+    background-color: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table thead th {
+    background-color: var(--primary-color);
+    color: var(--white);
+    font-weight: 600;
+    border: none;
+}
+
+/* Стили для вкладок */
+.nav-tabs .nav-link {
+    color: var(--text-color);
+    font-weight: 500;
+    border: none;
+    padding: 1rem 1.5rem;
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--primary-color);
+    border-bottom: 3px solid var(--primary-color);
+}
+
+/* Стили для аккордеона */
+.accordion-button:not(.collapsed) {
+    background-color: var(--light-blue);
+    color: var(--primary-color);
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: var(--primary-color);
+} 

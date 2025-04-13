@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ area.name }} - Нарынский государственный университет{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'science:research_areas' %}">Научные направления</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ area.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <h1 class="mb-4">{{ area.name }}</h1>
+            
+            {% if area.image %}
+            <img src="{{ area.image.url }}" class="img-fluid rounded mb-4" alt="{{ area.name }}">
+            {% endif %}
+            
+            <div class="content mb-5">
+                {{ area.description|safe }}
+            </div>
+
+            {% if projects %}
+            <h2 class="mb-4">Научные проекты</h2>
+            <div class="row">
+                {% for project in projects %}
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ project.title }}</h5>
+                            <p class="card-text">{{ project.description|truncatewords:30 }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="{% url 'science:research_project_detail' project.slug %}" class="btn btn-primary">
+                                    Подробнее
+                                </a>
+                                <small class="text-muted">
+                                    {{ project.start_date|date:"Y" }} - 
+                                    {% if project.end_date %}
+                                        {{ project.end_date|date:"Y" }}
+                                    {% else %}
+                                        настоящее время
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Публикации</h5>
+                </div>
+                <div class="card-body">
+                    {% if publications %}
+                    <ul class="list-unstyled">
+                        {% for publication in publications|slice:":5" %}
+                        <li class="mb-3">
+                            <a href="{% url 'science:publication_detail' publication.slug %}" class="text-decoration-none">
+                                {{ publication.title }}
+                            </a>
+                            <div class="small text-muted">
+                                {{ publication.authors }}, {{ publication.year }}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <a href="{% url 'science:publications' %}?area={{ area.slug }}" class="btn btn-outline-primary btn-sm">
+                        Все публикации
+                    </a>
+                    {% else %}
+                    <p class="text-muted">Публикации пока не добавлены</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if conferences %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Конференции</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        {% for conference in conferences|slice:":5" %}
+                        <li class="mb-3">
+                            <a href="{% url 'science:conference_detail' conference.slug %}" class="text-decoration-none">
+                                {{ conference.title }}
+                            </a>
+                            <div class="small text-muted">
+                                {{ conference.start_date|date:"d.m.Y" }} - {{ conference.end_date|date:"d.m.Y" }}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <a href="{% url 'science:conferences' %}" class="btn btn-outline-primary btn-sm">
+                        Все конференции
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% block extra_css %}
+<style>
+    .content {
+        line-height: 1.8;
+    }
+    .card {
+        transition: transform 0.2s;
+    }
+    .card:hover {
+        transform: translateY(-3px);
+    }
+    .list-unstyled li {
+        transition: transform 0.2s;
+    }
+    .list-unstyled li:hover {
+        transform: translateX(5px);
+    }
+</style>
+{% endblock %}
+{% endblock %} 

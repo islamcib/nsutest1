@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Научные направления - Нарынский государственный университет{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">Научные направления</h1>
+    
+    <div class="row">
+        {% for area in areas %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100">
+                {% if area.image %}
+                <img src="{{ area.image.url }}" class="card-img-top" alt="{{ area.name }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ area.name }}</h5>
+                    <p class="card-text">{{ area.description|truncatewords:30 }}</p>
+                    <a href="{% url 'science:research_area_detail' area.slug %}" class="btn btn-primary">
+                        Подробнее
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                Научные направления пока не добавлены
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% block extra_css %}
+<style>
+    .card {
+        transition: transform 0.2s;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+</style>
+{% endblock %}
+{% endblock %} 

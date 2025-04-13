@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ course.title }} - Нарынский государственный университет{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Основная информация -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h1 class="card-title mb-4">{{ course.title }}</h1>
+                    <div class="course-meta mb-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Программа:</strong><br>
+                                    <a href="{% url 'education:program_detail' course.program.slug %}">
+                                        {{ course.program.title }}
+                                    </a>
+                                </p>
+                                <p><strong>Кредиты:</strong><br>
+                                    {{ course.credits }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="course-content">
+                        {{ course.description|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Боковая панель -->
+        <div class="col-lg-4">
+            <!-- Другие курсы программы -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Другие курсы программы</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% for other_course in course.program.courses.all %}
+                    {% if other_course != course %}
+                    <a href="{% url 'education:course_detail' other_course.slug %}" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ other_course.title }}</h6>
+                            <small class="text-muted">{{ other_course.credits }} кредитов</small>
+                        </div>
+                    </a>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .course-content {
+        line-height: 1.8;
+    }
+    .course-content img {
+        max-width: 100%;
+        height: auto;
+        margin: 1rem 0;
+    }
+    .list-group-item:hover {
+        background-color: #f8f9fa;
+    }
+    .card {
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %} 

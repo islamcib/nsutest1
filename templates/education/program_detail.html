@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ program.title }} - Нарынский государственный университет{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Основная информация -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h1 class="card-title mb-4">{{ program.title }}</h1>
+                    <div class="program-meta mb-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Степень:</strong><br>
+                                    {{ program.degree }}</p>
+                                <p><strong>Продолжительность:</strong><br>
+                                    {{ program.duration }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="program-content">
+                        {{ program.description|safe }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Курсы -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">Курсы программы</h2>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for course in courses %}
+                        <a href="{% url 'education:course_detail' course.slug %}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ course.title }}</h5>
+                                <small class="text-muted">{{ course.credits }} кредитов</small>
+                            </div>
+                            <p class="mb-1">{{ course.description|truncatewords:20 }}</p>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Боковая панель -->
+        <div class="col-lg-4">
+            <!-- Другие программы -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Другие программы</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% for other_program in programs %}
+                    {% if other_program != program %}
+                    <a href="{% url 'education:program_detail' other_program.slug %}" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ other_program.title }}</h6>
+                            <small class="text-muted">{{ other_program.degree }}</small>
+                        </div>
+                    </a>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .program-content {
+        line-height: 1.8;
+    }
+    .program-content img {
+        max-width: 100%;
+        height: auto;
+        margin: 1rem 0;
+    }
+    .list-group-item:hover {
+        background-color: #f8f9fa;
+    }
+    .card {
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %} 

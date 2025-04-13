@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}О нас - {{ university_info.name }}{% endblock %}
+
+{% block content %}
+<section class="about-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h1 class="section-title">О нас</h1>
+                <div class="about-content">
+                    {{ university_info.mission|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="buildings-section">
+    <div class="container">
+        <h2 class="section-title text-center">Наши корпуса</h2>
+        <div class="row">
+            {% for building in buildings %}
+            <div class="col-md-4 mb-4">
+                <div class="building-card">
+                    {% if building.image %}
+                    <img src="{{ building.image.url }}" alt="{{ building.name }}" class="building-image">
+                    {% endif %}
+                    <div class="building-info">
+                        <h3>{{ building.name }}</h3>
+                        <p>{{ building.address }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="faculties-section">
+    <div class="container">
+        <h2 class="section-title text-center">Наши факультеты</h2>
+        <div class="row">
+            {% for faculty in faculties %}
+            <div class="col-md-3 mb-4">
+                <div class="faculty-card">
+                    {% if faculty.image %}
+                    <img src="{{ faculty.image.url }}" alt="{{ faculty.name }}" class="faculty-image">
+                    {% endif %}
+                    <div class="faculty-info">
+                        <h3><a href="{% url 'faculties:detail' faculty.slug %}">{{ faculty.name }}</a></h3>
+                        <p>{{ faculty.description|truncatewords:20 }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="colleges-section">
+    <div class="container">
+        <h2 class="section-title text-center">Наши колледжи</h2>
+        <div class="row">
+            {% for college in colleges %}
+            <div class="col-md-3 mb-4">
+                <div class="college-card">
+                    {% if college.image %}
+                    <img src="{{ college.image.url }}" alt="{{ college.name }}" class="college-image">
+                    {% endif %}
+                    <div class="college-info">
+                        <h3><a href="{% url 'colleges:college_detail' college.slug %}">{{ college.name }}</a></h3>
+                        <p>{{ college.description|truncatewords:20 }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %} 

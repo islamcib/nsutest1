@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Наука" %} | {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-5">{% trans "Научная деятельность" %}</h1>
+
+    <!-- Научные направления -->
+    <section class="mb-5">
+        <h2 class="mb-4">{% trans "Научные направления" %}</h2>
+        <div class="row">
+            {% for area in areas %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if area.image %}
+                    <img src="{{ area.image.url }}" class="card-img-top" alt="{{ area.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ area.title }}</h5>
+                        <p class="card-text">{{ area.description|truncatewords:30 }}</p>
+                        <a href="{% url 'science:research_area_detail' area.slug %}" class="btn btn-primary">
+                            {% trans "Подробнее" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'science:research_areas' %}" class="btn btn-outline-primary">
+                {% trans "Все направления" %}
+            </a>
+        </div>
+    </section>
+
+    <!-- Научные проекты -->
+    <section class="mb-5">
+        <h2 class="mb-4">{% trans "Научные проекты" %}</h2>
+        <div class="row">
+            {% for project in projects %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ project.title }}</h5>
+                        <p class="card-text">{{ project.description|truncatewords:30 }}</p>
+                        <a href="{% url 'science:research_project_detail' project.slug %}" class="btn btn-primary">
+                            {% trans "Подробнее" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Публикации -->
+    <section class="mb-5">
+        <h2 class="mb-4">{% trans "Публикации" %}</h2>
+        <div class="row">
+            {% for publication in publications %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ publication.title }}</h5>
+                        <p class="card-text">
+                            <small class="text-muted">{{ publication.authors }}</small><br>
+                            {{ publication.journal }}, {{ publication.year }}
+                        </p>
+                        <a href="{% url 'science:publication_detail' publication.slug %}" class="btn btn-primary">
+                            {% trans "Подробнее" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'science:publications' %}" class="btn btn-outline-primary">
+                {% trans "Все публикации" %}
+            </a>
+        </div>
+    </section>
+
+    <!-- Конференции -->
+    <section class="mb-5">
+        <h2 class="mb-4">{% trans "Конференции" %}</h2>
+        <div class="row">
+            {% for conference in conferences %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ conference.title }}</h5>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                {{ conference.start_date|date:"d.m.Y" }} - {{ conference.end_date|date:"d.m.Y" }}
+                            </small><br>
+                            {{ conference.description|truncatewords:30 }}
+                        </p>
+                        <a href="{% url 'science:conference_detail' conference.slug %}" class="btn btn-primary">
+                            {% trans "Подробнее" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'science:conferences' %}" class="btn btn-outline-primary">
+                {% trans "Все конференции" %}
+            </a>
+        </div>
+    </section>
+</div>
+{% endblock %} 

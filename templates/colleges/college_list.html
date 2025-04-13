@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Колледжи - {{ university_info.name }}{% endblock %}
+
+{% block content %}
+<section class="colleges-section py-5">
+    <div class="container">
+        <h1 class="section-title text-center mb-5">Наши колледжи</h1>
+        <div class="row">
+            {% for college in colleges %}
+            <div class="col-md-4 mb-4">
+                <div class="college-card h-100">
+                    {% if college.image %}
+                    <img src="{{ college.image.url }}" alt="{{ college.name }}" class="college-image">
+                    {% endif %}
+                    <div class="college-info p-4">
+                        <h3 class="mb-3">
+                            <a href="{% url 'colleges:college_detail' college.slug %}" class="text-decoration-none">
+                                {{ college.name }}
+                            </a>
+                        </h3>
+                        <p class="mb-3">{{ college.description|truncatewords:30 }}</p>
+                        <div class="college-meta">
+                            <p class="mb-2"><i class="bi bi-person"></i> Директор: {{ college.director }}</p>
+                            <p class="mb-2"><i class="bi bi-telephone"></i> {{ college.phone }}</p>
+                            <p class="mb-2"><i class="bi bi-envelope"></i> {{ college.email }}</p>
+                        </div>
+                        <a href="{% url 'colleges:college_detail' college.slug %}" class="btn btn-primary mt-3">
+                            Подробнее
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<style>
+    .college-card {
+        background: var(--white);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+
+    .college-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .college-image {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+    }
+
+    .college-info {
+        background: var(--white);
+    }
+
+    .college-info h3 a {
+        color: var(--primary-color);
+        transition: all 0.3s ease;
+    }
+
+    .college-info h3 a:hover {
+        color: var(--accent-color);
+    }
+
+    .college-meta {
+        color: var(--text-color);
+        font-size: 0.9rem;
+    }
+
+    .college-meta i {
+        color: var(--accent-color);
+        margin-right: 5px;
+    }
+
+    @media (max-width: 768px) {
+        .college-card {
+            margin-bottom: 1.5rem;
+        }
+    }
+</style>
+{% endblock %} 
